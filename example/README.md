@@ -1,5 +1,11 @@
 # Demo
 
+To bind:
+
+```
+bindthem.py myheader.h
+```
+
 To build:
 
 ```
