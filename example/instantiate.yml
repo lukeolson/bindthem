@@ -1,0 +1,6 @@
+instantiate:
+- types:
+    - [int, double, "std::complex<double>"]
+    - [int, double, double]
+  functions:
+    - myfunc
