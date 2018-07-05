@@ -54,9 +54,9 @@ Then `myheader_bind.cpp` will be bind the method `myheader.myfunc`.  No type con
 ```yaml
 - types:
     - [int, double, "std::complex<double>"]
-    - [int, double, double]
+    - [int, float, std::complex<float>]
   functions:
-    - test9
+    - myfunc
 ```
 
 Here, `I`, `T`, and `F` would be `int`, `double`, and `complex<double` along with `int`, `double`, and `double`.
@@ -96,7 +96,7 @@ PYBIND11_MODULE(myheader, m) {
 
     m.def("myfunc", &_myfunc<int, double, std::complex<double>>,
         py::arg("J").noconvert(), py::arg("x").noconvert(), py::arg("y").noconvert(), py::arg("a"));
-    m.def("myfunc", &_myfunc<int, double, double>,
+    m.def("myfunc", &_myfunc<int, float, std::complex<float>>,
         py::arg("J").noconvert(), py::arg("x").noconvert(), py::arg("y").noconvert(), py::arg("a"),
 R"pbdoc(
 My Function

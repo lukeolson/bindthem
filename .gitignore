@@ -1,2 +1,5 @@
 *_bind.cpp
 .*.swp
+build/
+*.so
+var/
