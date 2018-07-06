@@ -4,15 +4,9 @@ A script for C++ kernels, to find them and in the darkness bind them.
 
 ## Examples
 
-https://github.com/lukeolson/bindthem/tree/master/example
-
-or
-
-https://github.com/lukeolson/sparse-ops
-
-or
-
-https://github.com/pyamg/pyamg
+- https://github.com/lukeolson/bindthem/tree/master/example
+- https://github.com/lukeolson/sparse-ops
+- https://github.com/pyamg/pyamg
 
 ## How to use
 
