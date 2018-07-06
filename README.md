@@ -2,6 +2,18 @@
 
 A script for C++ kernels, to find them and in the darkness bind them.
 
+## Examples
+
+https://github.com/lukeolson/bindthem/tree/master/example
+
+or
+
+https://github.com/lukeolson/sparse-ops
+
+or
+
+https://github.com/pyamg/pyamg
+
 ## How to use
 
 The .cpp files in this directory are generated using the script
