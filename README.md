@@ -1,17 +1,34 @@
 # BindThem
 
-A generating PyBind11 bindings for C++ kernels automatically.
+A script for C++ kernels, to find them and in the darkness bind them.
 
-##
+## Examples
+
+- https://github.com/lukeolson/bindthem/tree/master/example
+- https://github.com/lukeolson/sparse-ops
+- https://github.com/pyamg/pyamg
+
+## How to use
 
 The .cpp files in this directory are generated using the script
-`generate_bindings.py`.  Pybind11 is used to for the Python bindings.
+`bindthem.py`.  Pybind11 is used to for the Python bindings.
 
-Run
+**install**
+```
+pip install .
+```
+or simply use the script `bindthem.py`
 
-    bindthem myheader.h
+**try it**
+```
+bindthem.py myheader.h
+```
+in examples to generate `myheader_bind.cpp`, followed by
+```
+python setup.py build_ext --inplace
+```
 
-to generate `myheader_bind.cpp`.  See `bindthem.py` for more details.
+See `bindthem.py` for more details.
 
 ## C++ kernels
 
