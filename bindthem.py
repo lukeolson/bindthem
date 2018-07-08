@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 from __future__ import print_function
 import yaml
+import os
 
 PYBINDHEADER = """\
 #include <pybind11/pybind11.h>
@@ -196,7 +197,7 @@ def build_plugin(headerfile, ch, comments, inst, remaps):
 
     remaps: list of remaps
     """
-    headerfilename = headerfile.replace('.h', '')
+    headerfilename = os.path.splitext(headerfile)[0]
 
     indent = '    '
     plugin = ''
@@ -308,7 +309,7 @@ def main():
 
     args = parser.parse_args()
 
-    print('[Generating {} from {}]'.format(args.input_file.replace('.h', '_bind.cpp'), args.input_file))
+    print('[Generating binding for {}]'.format(args.input_file))
     ch = CppHeaderParser.CppHeader(args.input_file)
     comments = find_comments(args.input_file, ch)
 
@@ -335,7 +336,8 @@ def main():
     if args.output_file is not None:
         outf = args.output_file
     else:
-        outf = args.input_file.replace('.h', '_bind.cpp')
+        basename = os.path.splitext(args.input_file)[0]
+        outf = basename + '_bind.cpp'
 
     with open(outf, 'wt') as outf:
 

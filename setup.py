@@ -136,7 +136,8 @@ setup(
     #
     ext_modules=ext_modules,
     cmdclass={'build_ext': BuildExt, 'test': PyTest},
-    install_requires = ['numpy>=1.7.0', 'pytest>=2', 'pybind11>=2.2'],
+    install_requires = ['numpy>=1.7.0', 'pytest>=2', 'pybind11>=2.2',
+                        'pyyaml', 'CppHeaderParser'],
     setup_requires=['numpy', 'pybind11'],
     tests_require=['pytest'],
     #
@@ -163,4 +164,5 @@ setup(
         'Topic :: Scientific/Engineering :: Mathematics',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
+    scripts=['bindthem.py'],
 )
