@@ -4,3 +4,13 @@ instantiate:
     - [int, float, "std::complex<float>"]
   functions:
     - myfunc
+- types:
+    - null
+  functions:
+    - printit
+    - printit0
+- types:
+    - [int, double]
+  functions:
+    - jacobi
+    - jacobi_m

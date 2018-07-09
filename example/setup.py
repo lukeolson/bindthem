@@ -108,10 +108,10 @@ class get_pybind_include(object):
         return pybind11.get_include(self.user)
 
 
-headers = ['myheader.h']
+headers = ['relaxation.hpp']
 
-ext_modules = [Extension('myheader',
-                         sources=['myheader_bind.cpp'],
+ext_modules = [Extension('relaxation',
+                         sources=['relaxation_bind.cpp'],
                          include_dirs=[get_pybind_include(), get_pybind_include(user=True)],
                          language='c++')]
 
