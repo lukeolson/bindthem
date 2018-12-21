@@ -218,9 +218,13 @@ def build_plugin(headerfile, ch, comments, inst, remaps):
     plugin += indent + 'Methods\n'
     plugin += indent + '-------\n'
     for f in ch.functions:
-        for func in inst:
-            if f['name'] in func['functions']:
-                plugin += indent + f['name'] + '\n'
+        templated = bool(f['template'])
+        if not templated:
+            plugin += indent + f['name'] + '\n'
+        if templated:
+            for func in inst:
+                if f['name'] in func['functions']:
+                    plugin += indent + f['name'] + '\n'
     plugin += indent + ')pbdoc";\n\n'
 
     plugin += indent + 'py::options options;\n'
@@ -230,22 +234,38 @@ def build_plugin(headerfile, ch, comments, inst, remaps):
     bound = []
     for f in ch.functions:
         # for each function:
-        #   - find the entry in the instantiation list
-        #   - note any array parameters to the function
-        #   - for each type, instantiate
-        found = False
-        for func in inst:
-            if f['name'] in func['functions']:
-                found = True
-                types = func['types']
+        #   1 determine if the function is templated
+        #   2 if templated:
+        #       - find the entry in the instantiation list
+        #   3 note any array parameters to the function
+        #   4 if templated:
+        #       - for each type, instantiate and bind
+        #   5 if not templated:
+        #       - bind
 
-        if not found:
-            # print('Could not find {}'.format(f['name']))
-            unbound.append(f['name'])
-            continue
+        # 1
+        templated = bool(f['template'])
+
+        # 2
+        found = False
+        if templated:
+            for func in inst:
+                if f['name'] in func['functions']:
+                    found = True
+                    types = func['types']
+
+            if not found:
+                print('Could not find an instantiation for {}'.format(f['name']))
+                unbound.append(f['name'])
+                continue
+            else:
+                bound.append(f['name'])
         else:
             bound.append(f['name'])
+            types = [None]
 
+
+        # 3
         # find all parameter names and mark if array
         argnames = []
         for p in f['parameters']:
@@ -301,8 +321,7 @@ def build_plugin(headerfile, ch, comments, inst, remaps):
         plugin += '\n'
 
     plugin += '}\n'
-    # plugin += '#undef NC\n'
-    # plugin += '#undef YC\n'
+
     return plugin, bound, unbound
 
 
@@ -330,7 +349,10 @@ def main():
     if args.input_file == 'bind_examples.h':
         data = yaml.load(open('instantiate-test.yml', 'r'))
     else:
-        data = yaml.load(open('instantiate.yml', 'r'))
+        try:
+            data = yaml.load(open('instantiate.yml', 'r'))
+        except:
+            data = {'instantiate': None}
 
     inst = data['instantiate']
     if 'remaps' in data:
