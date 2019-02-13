@@ -300,7 +300,7 @@ def build_plugin(headerfile, ch, comments, inst, remaps):
                 typestr = ''
 
             plugin += indent + \
-                'm.def("{}", &_{}{},\n'.format(instname, f['name'], typestr)
+                'm.def("{}", &_{}{}'.format(instname, f['name'], typestr)
 
             # name the arguments
             pyargnames = []
@@ -311,6 +311,8 @@ def build_plugin(headerfile, ch, comments, inst, remaps):
                 pyargnames.append('py::arg("{}"){}'.format(p, convert))
 
             argstring = indent + ', '.join(pyargnames)
+            if len(pyargnames)>0:
+                argstring = ',\n' + argstring
             plugin += indent + argstring
 
             # add the docstring to the last
