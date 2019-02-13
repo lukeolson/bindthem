@@ -133,9 +133,10 @@ def build_function(func):
             # if not a pointer, just copy it
             param = p['type'] + ' ' + p['name']
 
-        fdef += '{:>25},\n'.format(param)    # set width to 25
+        fdef += '{:>25}'.format(param)    # set width to 25
+        if i < len(func['parameters'])-1:
+            fdef += ',\n'
 
-    fdef = fdef.strip()[:-1]  # trim comma and newline
     fdef += '\n' + ' ' * len(newcall) + ')'
     fdef += '\n{\n'
 
@@ -171,7 +172,7 @@ def build_function(func):
     fdef += newcall + '\n'
 
     # function parameters
-    for p in func['parameters']:
+    for i, p in enumerate(func['parameters']):
         if '_size' in p['name']:
             fdef = fdef.strip()
             name, s = p['name'].split('_size')
@@ -184,8 +185,8 @@ def build_function(func):
             else:
                 name = p['name']
             fdef += '{:>25}'.format(name)
-        fdef += ',\n'
-    fdef = fdef.strip()[:-1]
+        if i < len(func['parameters'])-1:
+            fdef += ',\n'
     fdef += '\n' + ' ' * len(newcall) + ');\n}'
     return fdef
 
@@ -342,10 +343,16 @@ def main():
 
     args = parser.parse_args()
 
+    #
+    # Parse the header file
+    #
     print('[Generating binding for {}]'.format(args.input_file))
     ch = CppHeaderParser.CppHeader(args.input_file)
     comments = find_comments(args.input_file, ch)
 
+    #
+    # load the instantiate file
+    #
     if args.input_file == 'bind_examples.h':
         data = yaml.load(open('instantiate-test.yml', 'r'))
     else:
@@ -353,15 +360,25 @@ def main():
             data = yaml.load(open('instantiate.yml', 'r'))
         except:
             data = {'instantiate': None}
-
     inst = data['instantiate']
+
+    #
+    # remap functions
+    #
     if 'remaps' in data:
         remaps = data['remaps']
     else:
         remaps = []
+
+    #
+    # build the plugin
+    #
     plugin, bound, unbound = build_plugin(
         args.input_file, ch, comments, inst, remaps)
 
+    #
+    # build each function
+    #
     chfuncs = {f['name']: f for f in ch.functions}
     print('\t[unbound functions: {}]'.format(' '.join(unbound)))
     flist = []
@@ -370,6 +387,9 @@ def main():
         fdef = build_function(chfuncs[fname])
         flist.append(fdef)
 
+    #
+    # write to _bind.cpp
+    #
     if args.output_file is not None:
         outf = args.output_file
     else:
