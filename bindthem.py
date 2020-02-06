@@ -134,9 +134,8 @@ def build_function(func):
             param = p['type'] + ' ' + p['name']
 
         fdef += '{:>25}'.format(param)    # set width to 25
-        if i < len(func['parameters'])-1:
-            fdef += ',\n'
-
+        fdef += ',\n'
+    fdef = fdef[:-2]  # remove trailing comma and newline
     fdef += '\n' + ' ' * len(newcall) + ')'
     fdef += '\n{\n'
 
@@ -256,15 +255,15 @@ def build_plugin(headerfile, ch, comments, inst, remaps):
                     types = func['types']
 
             if not found:
-                print('Could not find an instantiation for {}'.format(f['name']))
+                # print('Could not find an instantiation for {}'.format(f['name']))
                 unbound.append(f['name'])
                 continue
             else:
                 bound.append(f['name'])
         else:
-            bound.append(f['name'])
+            unbound.append(f['name'])
             types = [None]
-
+            continue
 
         # 3
         # find all parameter names and mark if array
@@ -310,10 +309,10 @@ def build_plugin(headerfile, ch, comments, inst, remaps):
                     convert = '.noconvert()'
                 pyargnames.append('py::arg("{}"){}'.format(p, convert))
 
-            argstring = indent + ', '.join(pyargnames)
-            if len(pyargnames)>0:
+            argstring = indent + indent + ', '.join(pyargnames)
+            if len(pyargnames) > 0:
                 argstring = ',\n' + argstring
-            plugin += indent + argstring
+            plugin += argstring
 
             # add the docstring to the last
             if i == ntypes - 1:
@@ -356,10 +355,10 @@ def main():
     # load the instantiate file
     #
     if args.input_file == 'bind_examples.h':
-        data = yaml.load(open('instantiate-test.yml', 'r'))
+        data = yaml.safe_load(open('instantiate-test.yml', 'r'))
     else:
         try:
-            data = yaml.load(open('instantiate.yml', 'r'))
+            data = yaml.safe_load(open('instantiate.yml', 'r'))
         except:
             data = {'instantiate': None}
     inst = data['instantiate']
@@ -381,13 +380,13 @@ def main():
     #
     # build each function
     #
-    chfuncs = {f['name']: f for f in ch.functions}
     print('\t[unbound functions: {}]'.format(' '.join(unbound)))
     flist = []
-    for fname in bound:
-        print('\t[building {}]'.format(fname))
-        fdef = build_function(chfuncs[fname])
-        flist.append(fdef)
+    for f in ch.functions:
+        if f['name'] in bound:
+            print('\t[building {}]'.format(f['name']))
+            fdef = build_function(f)
+            flist.append(fdef)
 
     #
     # write to _bind.cpp
