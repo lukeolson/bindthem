@@ -14,5 +14,4 @@ ext_modules = [Pybind11Extension('tests.bind_examples', sources=['tests/bind_exa
 setup(
     ext_modules=ext_modules,
     cmdclass={'build_ext': build_ext},
-    scripts=['bindthem.py'],
 )
