@@ -1,4 +1,4 @@
-import pyamg.amg_core.tests.bind_examples as g
+from . import bind_examples as g
 import numpy as np
 from numpy.testing import TestCase
 from pytest import raises as assert_raises
@@ -65,7 +65,7 @@ class TestVectors(TestCase):
 
     def test_10b(self):
         # bool, float32
-        J = np.array([1, 1, 1], dtype=np.bool)
+        J = np.array([1, 1, 1], dtype=bool)
         x = np.array([1.0, 2.0, 3.0], dtype=np.float32)
 
         assert g.test10(J, x) == 1
@@ -122,7 +122,7 @@ class TestVectors(TestCase):
 
     def test_10i(self):
         # int64, float32  (should FAIL on downconvert)
-        J = np.array([1, 1, 1], dtype=np.int32)
-        x = np.array([1.0, 2.0, 3.0], dtype=np.float128)
+        J = np.array([1, 1, 1], dtype=np.int64)
+        x = np.array([1.0, 2.0, 3.0], dtype=np.float32)
 
         assert_raises(TypeError, g.test10, J, x)
