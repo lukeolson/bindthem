@@ -9,9 +9,7 @@ The C++ kernels are very limited.  Uses pybind11.
 from setuptools import setup
 from pybind11.setup_helpers import Pybind11Extension, build_ext
 
-ext_modules = [Pybind11Extension('tests.bind_examples',
-                                  sources=['tests/bind_examples_bind.cpp'],
-                                )]
+ext_modules = [Pybind11Extension('tests.bind_examples', sources=['tests/bind_examples_bind.cpp'])]
 
 setup(
     ext_modules=ext_modules,
